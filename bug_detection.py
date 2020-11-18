@@ -23,11 +23,11 @@ params.minArea = 400
 
 # Filter by Convexity
 params.filterByConvexity = True
-params.minConvexity = 0.00001
+params.minConvexity = 0.1
 
 # Filter by Inertia
 params.filterByInertia = True
-params.minInertiaRatio = 0.000001
+params.minInertiaRatio = 0.1
 
 
 # Create a detector with the parameters
