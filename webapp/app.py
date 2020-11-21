@@ -4,6 +4,7 @@ from PIL import Image
 import os
 import utils
 import zipfile
+import streamlit.components.v1 as components
 
 def page_setup():
     st.set_page_config(page_title='Pest Counter')
@@ -36,8 +37,6 @@ def main():
     	image = Image.open(image_file)
     	if st.button("Process"):
     		utils.detect_bugs(image=image)
-
-    #utils.zipdir('onion', zipfile.ZipFile('onion.zip', 'w'))
 
 if __name__ == "__main__":
     main()

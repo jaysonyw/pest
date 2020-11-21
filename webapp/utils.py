@@ -4,6 +4,7 @@ import numpy as np
 import base64
 import zipfile
 import os
+import streamlit.components.v1 as components
 
 def detect_bugs(image):
     #Gray scale and blur the image
@@ -36,16 +37,19 @@ def detect_bugs(image):
     imgKeyPoints = cv2.drawKeypoints(img, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
     # Crop out keypoints
-    #os.mkdir("images")
+    if not os.path.exists('immages'):
+        os.mkdir("immages")
+    filename = 0
     for keypoint in keypoints:
-        filename = 1
+        filename += 1
         x = int(keypoint.pt[0])
         y = int(keypoint.pt[1])
         size = int(keypoint.size)
         crop = img[max(1,y-2*size): min(height-1,y+2*size), max(1,x-2*size): min(width-1,x+2*size)]
         st.image(crop, use_column_width = False)
-        #cv2.imwrite(str(filename) + ".jpg", crop)
-        
+        cv2.imwrite("immages/" + str(filename) + ".jpg", crop)
+
+    zipdir("immages")       
     return imgKeyPoints
 
 #stuff to set background image
@@ -69,23 +73,21 @@ def set_bg_image(png_file):
     st.markdown(page_bg_img, unsafe_allow_html=True)
     return
 
-"""
-def zipdir(path, ziph):
+
+def zipdir(path):
     # ziph is zipfile handle
+    zipf = zipfile.ZipFile('tomato.zip','w')
+
     for root, dirs, files in os.walk(path):
         for file in files:
-            ziph.write(os.path.join(root, file))
+            zipf.write(os.path.join(root, file))
 
-    zip_path = 'test.zip'
-    zipf = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
-    zipdir('onion/', zipf)
     zipf.close()
 
-    with open(zip_path, "rb") as f:
+    with open('tomato.zip', "rb") as f:
         bytes = f.read()
         b64 = base64.b64encode(bytes).decode()
-        href = f'<a href="data:file/zip;base64,{b64}" download=\'{filename}.zip\'>\
+        href = f'<a href="data:file/zip;base64,{b64}" download=\'croppedbugs.zip\'>\
             Click to download\
             </a>'
     st.sidebar.markdown(href, unsafe_allow_html=True)
-"""
